@@ -1,0 +1,37 @@
+.up-grid { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 900px) { .up-grid { grid-template-columns: minmax(0, 1fr); } }
+.up-field { display: grid; gap: 6px; }
+.up-lbl { font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+.up-field .seg { flex-wrap: wrap; }
+
+.up-file { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+.up-file img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; flex: none; background: var(--surface-3); }
+.up-file-info { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.up-file-info b { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.up-file-info span { font-size: 12.5px; }
+
+.up-warn { border-radius: 12px; padding: 10px 12px; background: var(--accent-soft); color: var(--text); font-size: 13px; display: grid; gap: 8px; }
+.up-warn p { margin: 0; }
+.up-warn.bad { background: var(--danger-soft); }
+.up-warn.bad p { color: var(--danger); }
+
+.up-prog { display: grid; gap: 6px; font-size: 13px; }
+.up-prog progress { width: 100%; height: 8px; border: 0; border-radius: 999px; overflow: hidden; background: var(--surface-3); accent-color: var(--accent); }
+.up-prog progress::-webkit-progress-bar { background: var(--surface-3); border-radius: 999px; }
+.up-prog progress::-webkit-progress-value { background: var(--accent); border-radius: 999px; }
+.up-prog progress::-moz-progress-bar { background: var(--accent); }
+.up-note { margin: 0; font-size: 12.5px; }
+
+.up-bar { gap: 10px; align-items: center; }
+.up-zoom { gap: 6px; }
+.up-zv { min-width: 52px; text-align: center; font-size: 13px; }
+.up-view { position: relative; height: min(560px, 64vh); min-height: 300px; border-radius: 12px; border: 1px solid var(--line); overflow: hidden; touch-action: none; user-select: none; cursor: grab; }
+.up-view:active { cursor: grabbing; }
+.up-view:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.up-view canvas { display: block; }
+.up-tag { position: absolute; top: 10px; padding: 3px 9px; border-radius: 999px; font: 600 11.5px/1.4 var(--font); background: rgba(0,0,0,.62); color: #fff; pointer-events: none; }
+.up-tag.l { left: 10px; }
+.up-tag.r { right: 10px; }
+.up-empty { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 6px; text-align: center; background: var(--surface); border: 0; cursor: default; }
+.up-empty .btn { margin-top: 6px; }
+.up-hint { font-size: 12.5px; }

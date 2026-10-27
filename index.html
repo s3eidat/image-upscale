@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Image Upscaler — Free AI 2x / 4x Image Enlarger, Private | S3eidat Tools</title>
+<meta name="description" content="Enlarge images 2x or 4x with an AI super-resolution model (Swin2SR) that runs in your browser. Before/after slider, PNG download. Free, private, nothing uploaded.">
+<meta property="og:title" content="Image Upscaler — free, private AI image enlarger">
+<meta property="og:description" content="Upscale images 2x with Swin2SR AI, right in your browser. No uploads, no sign-up.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/image-upscale/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/image-upscale/">
+<meta property="og:image" content="https://s3eidat.github.io/image-upscale/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Image Upscaler — Enlarge images 2x with AI, free">
+<meta name="twitter:description" content="Enlarge images 2x with AI, free. Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/image-upscale/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Image Upscaler", "url": "https://s3eidat.github.io/image-upscale/", "description": "Enlarge images 2x with AI, free. Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/image-upscale/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="image-upscale">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Image Upscaler</h1>
+    <p>Enlarge a photo, logo or screenshot 2x with an AI super-resolution model that runs on your own device. It adds real detail instead of just blurring pixels bigger. No upload, no account, no watermark.</p>
+  </section>
+
+  <div class="up-grid">
+    <section class="card stack">
+      <label class="drop" id="drop">
+        <input type="file" accept="image/*" hidden>
+        <svg class="i"><use href="#i-upload"/></svg>
+        <b>Drop an image here</b>
+        <span class="faint">or click to choose · you can also paste</span>
+      </label>
+
+      <div class="up-file" id="file" hidden>
+        <img id="thumb" alt="">
+        <div class="up-file-info"><b id="fname"></b><span class="faint" id="fdims"></span></div>
+        <button class="btn ghost small" id="change">Change</button>
+      </div>
+
+      <div class="up-field">
+        <span class="up-lbl" id="scale-l">Enlarge</span>
+        <div class="seg" id="scale" role="group" aria-labelledby="scale-l">
+          <button aria-pressed="true" data-v="2">2x</button>
+          <button aria-pressed="false" data-v="4">4x (two passes)</button>
+        </div>
+      </div>
+      <div class="up-field">
+        <span class="up-lbl" id="eng-l">Run on</span>
+        <div class="seg" id="engine" role="group" aria-labelledby="eng-l">
+          <button aria-pressed="true" data-v="auto">Auto (fastest)</button>
+          <button aria-pressed="false" data-v="wasm">CPU only</button>
+        </div>
+      </div>
+      <label class="field">Tile size
+        <select class="select" id="tile">
+          <option value="64">64 px (fastest, least memory)</option>
+          <option value="96">96 px</option>
+          <option value="128">128 px</option>
+          <option value="192">192 px (slower, more memory)</option>
+        </select>
+      </label>
+
+      <div class="up-warn" id="warn" hidden>
+        <p id="warnText"></p>
+        <button class="btn small" id="shrink" hidden>Shrink to fit and continue</button>
+      </div>
+
+      <div class="row">
+        <button class="btn primary big grow" id="go" disabled><svg class="i"><use href="#i-play"/></svg><span id="goLbl">Upscale 2x</span></button>
+        <button class="btn big" id="cancel" hidden><svg class="i"><use href="#i-x"/></svg>Cancel</button>
+      </div>
+      <div class="up-prog" id="prog" hidden>
+        <progress id="bar" max="1" value="0" aria-label="Upscaling progress"></progress>
+        <div class="row between"><span id="pText" class="faint">Starting…</span><span id="pEta" class="mono faint"></span></div>
+      </div>
+      <p class="faint up-note" id="engineNote">The AI model (21 MB) loads from this page the first time you upscale. Everything runs in your browser.</p>
+    </section>
+
+    <section class="card stack">
+      <div class="row up-bar">
+        <div class="seg" id="before" role="group" aria-label="Before view">
+          <button aria-pressed="true" data-v="smooth">Before: smooth resize</button>
+          <button aria-pressed="false" data-v="pixels">Before: pixels</button>
+        </div>
+        <span class="grow"></span>
+        <div class="row up-zoom">
+          <button class="btn small icon" id="zoomOut" aria-label="Zoom out">−</button>
+          <span class="mono up-zv" id="zoomV">100%</span>
+          <button class="btn small icon" id="zoomIn" aria-label="Zoom in">+</button>
+          <button class="btn small" id="fitBtn">Fit</button>
+          <button class="btn small" id="oneBtn">1:1</button>
+        </div>
+      </div>
+
+      <div class="up-view checker" id="view" tabindex="0" aria-label="Before and after comparison. Drag the line to compare, drag elsewhere to pan, scroll to zoom. Arrow keys move the line, plus and minus zoom, 0 fits, 1 is actual size.">
+        <canvas id="cv"></canvas>
+        <span class="up-tag l" id="tagL" hidden>Before</span><span class="up-tag r" id="tagR" hidden>After · AI</span>
+        <div class="empty up-empty" id="empty"><b>No image yet</b>Drop an image on the left, or <button class="btn small" id="sample">try a sample</button></div>
+      </div>
+      <div class="row">
+        <span class="faint up-hint" id="hint">Drag the line to compare · drag elsewhere to pan · scroll to zoom</span>
+        <span class="grow"></span>
+        <button class="btn primary" id="save" disabled><svg class="i"><use href="#i-download"/></svg>Download PNG</button>
+      </div>
+      <div class="stats" id="stats" hidden></div>
+    </section>
+  </div>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
